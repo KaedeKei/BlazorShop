@@ -1,0 +1,16 @@
+﻿@page "/products"
+
+<PageTitle>Products</PageTitle>
+
+@inject Catalog Catalog
+
+<h3>Список товаров</h3>
+
+@foreach(var product in Catalog.GetProducts())
+{
+	<div>@product.Id. @product.Name - @product.Price.ToString("C")</div>
+}
+
+@code {
+
+}

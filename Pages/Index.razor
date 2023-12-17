@@ -1,0 +1,40 @@
+﻿@page "/"
+@inject ILogger<Index> Logger
+@implements IDisposable
+
+<PageTitle>Index</PageTitle>
+
+<h1>Здравствуй, друг!</h1>
+
+Добро пожаловать в интернет-магазин "Интернет-Магазин".
+
+<div>Сейчас @_now </div>
+
+@code{
+	private string _now;
+	PeriodicTimer? _timer;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		Logger.LogWarning("Before: {ThreadId}", Environment.CurrentManagedThreadId.ToString());
+		_now = DateTime.Now.ToString("dd MMMM yyyyг., HH:mm:ss");
+		_ = RunDTLive();
+	}
+
+	async Task RunDTLive()
+	{
+		_timer = new PeriodicTimer(TimeSpan.FromSeconds(1));		
+		while (await _timer.WaitForNextTickAsync())
+		{
+			Logger.LogWarning("Before: {ThreadId}", Environment.CurrentManagedThreadId.ToString());
+			_now = DateTime.Now.ToString("dd MMMM yyyyг., HH:mm:ss");
+			InvokeAsync(StateHasChanged);
+		}
+	}
+
+	public void Dispose()
+	{
+		_timer?.Dispose();
+	}
+}
