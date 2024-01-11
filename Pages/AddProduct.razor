@@ -1,9 +1,11 @@
 ﻿@page "/addproducts"
+@using BlazorShop.Models
+@using BlazorShop.Data
 @using System.ComponentModel.DataAnnotations
 
 <PageTitle>Adding new product</PageTitle>
 
-@inject Catalog Catalog
+@inject ICatalog Catalog
 
 <h3>Добавление товара</h3>
 
@@ -12,10 +14,10 @@
   <DataAnnotationsValidator />
  
 	<table border="0" cellpadding="10">
-		<tr><td>Название:</td><td><InputText @bind-Value="_model.Name" /></td></tr>
-		<tr><td>Цена, руб.:</td><td><InputNumber @bind-Value="_model.Price" /></td></tr>
+		<tr><td>Название:</td><td><InputText @bind-Value="_model.Name" @onclick="RefreshMessageText" /></td></tr>
+		<tr><td>Цена, руб.:</td><td><InputNumber @bind-Value="_model.Price" @onclick="RefreshMessageText" /></td></tr>
 	</table>
-	<div class="add_product_div">@_saved_text</div>
+	<div class="add_product_div">@_message_text</div>
  
   <br/> <input type="submit" value="Сохранить">
   <ValidationSummary />
@@ -24,27 +26,32 @@
 
 @code {
 	private FormModel _model = new();
-	string _saved_text;
+	string _message_text;
 	private void ProcessValidForm()
 	{
-		int _new_id = Catalog.GetProducts().Length + 1;
-		Product _product = new Product(_new_id, _model.Name, _model.Price);
+		//int _new_id = Catalog.GetProducts().ToList().Count + 1;//аретфакт от других каталогов, без использования БД
+		//Product _product = new Product(_new_id, _model.Name, _model.Price);//аретфакт от других каталогов, без использования БД
+		Product _product = new Product(_model.Name, _model.Price);
 		Catalog.AddProduct(_product);
-		_saved_text = "Товар \"" + _model.Name + "\" был успешно сохранен.";
+		_message_text = "Товар \"" + _model.Name + "\" был успешно сохранен.";
 		_model = new ();
 	}
 
 	private class FormModel
 	{
-		[Required, MinLength(3)]
+		[Required(ErrorMessage = "Необходимо заполнить название товара.")]
+		[MinLength(3, ErrorMessage = "Название должно содержать более 3-х символов.")]
 		public string Name { get; set; }
 
-		[Required, Range(1, 10000000)]
+		[Required(ErrorMessage = "Необходимо заполнить цену товара.")]
+		[Range(1, 10000000, ErrorMessage = "Цена должна быть от 0 до 1 000 000 р.")]
 		public decimal Price { get; set; }		
 	}
-
-	
-
+		
+	private void RefreshMessageText()
+	{
+		_message_text = "";
+	}
 	
 	
 	

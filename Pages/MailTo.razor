@@ -1,0 +1,56 @@
+﻿@page "/mailto"
+@using BlazorShop.Models
+@using BlazorShop.Data
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>MailTo</PageTitle>
+
+@inject ISendMail SendMailKit
+
+<h4>Если у Вас остались какие-то вопросы или пожелания, Вы можете заполнить форму обратной связи.</h4>
+
+<EditForm Model="_model" OnValidSubmit="ProcessValidForm">
+	<DataAnnotationsValidator />
+
+	<table border="0" cellpadding="10">
+		<tr><td>Ваш адрес электронной почты:</td><td><InputText @bind-Value="_model.UserEmail" @onclick="RefreshMessageText" /></td></tr>
+		<tr><td>Тема сообщения:</td><td><InputText @bind-Value="_model.MailSubject" @onclick="RefreshMessageText" /></td></tr>
+		<tr><td>Текст сообщения:</td><td><InputTextArea @bind-Value="_model.MailBody" @onclick="RefreshMessageText"></InputTextArea></td></tr>
+	</table>
+	<div class="add_product_div">@_message_text</div>
+
+	<br /> <input type="submit" value="Отправить">
+	<ValidationSummary />
+</EditForm>
+
+@code {
+	private FormModel _model = new();
+	string _message_text;
+	private void ProcessValidForm()
+	{
+		SendMailKit.SendMail(_model.UserEmail, _model.MailSubject, _model.MailBody);
+		_message_text = "Ваше сообщение успешно отправлено.";
+		_model = new();
+	}
+
+	private class FormModel
+	{
+		[Required(ErrorMessage = "Необходимо заполнить адрес электронной почты.")]
+		[EmailAddress(ErrorMessage = "Введен некорректный адрес электронной почты.")]
+		public string UserEmail { get; set; }
+
+		[Required(ErrorMessage = "Необходимо заполнить тему сообщения.")]
+		[MinLength(3, ErrorMessage = "Тема должна содержать более 3-х символов.")]
+		public string MailSubject { get; set; }
+
+		[Required(ErrorMessage = "Необходимо заполнить текст сообщения.")]
+		[MinLength(3, ErrorMessage = "Текст сообщения должен содержать более 3-х символов.")]
+		public string MailBody { get; set; }
+	}
+
+	private void RefreshMessageText()
+	{
+		_message_text = "";
+	}
+
+}

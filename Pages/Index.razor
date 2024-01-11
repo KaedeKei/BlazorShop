@@ -1,5 +1,7 @@
 ﻿@page "/"
+@using BlazorShop.Models
 @inject ILogger<Index> Logger
+@inject ITime Time
 @implements IDisposable
 
 <PageTitle>Index</PageTitle>
@@ -9,6 +11,8 @@
 Добро пожаловать в интернет-магазин "Интернет-Магазин".
 
 <div>Сейчас @_now </div>
+
+<div>UTC: @Time.ToString() </div>
 
 @code{
 	private string _now;
@@ -32,6 +36,7 @@
 			InvokeAsync(StateHasChanged);
 		}
 	}
+
 
 	public void Dispose()
 	{
