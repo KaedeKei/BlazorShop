@@ -1,4 +1,4 @@
-﻿namespace BlazorShop.Models
+﻿namespace BlazorShop.Services
 {
     public interface ITime
     {

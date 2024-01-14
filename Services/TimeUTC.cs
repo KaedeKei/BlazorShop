@@ -1,4 +1,4 @@
-﻿namespace BlazorShop.Models
+﻿namespace BlazorShop.Services
 {
     public class TimeUTC : ITime
     {
@@ -10,7 +10,7 @@
         public override string ToString()
         {
             return DateTime.UtcNow.ToString("dd MMMM yyyyг., HH:mm:ss");
-		}
+        }
 
     }
 }
