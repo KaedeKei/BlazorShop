@@ -2,7 +2,7 @@
 using MailKit.Net.Smtp;
 namespace SocialApp.Services
 {
-	public class EmailService
+	public class EmailServiceMailKit
 	{
 		public void SendEmail(string mail_subject, string message)
 		{

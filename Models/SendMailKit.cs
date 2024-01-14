@@ -6,7 +6,7 @@ namespace BlazorShop.Models
 	{
 		public void SendMail(string user_email, string mail_subject, string mail_body) 
 		{
-			EmailService emailService = new EmailService();
+			EmailServiceMailKit emailService = new EmailServiceMailKit();
 
 			string myMessage = "E-mail отправителя: " + user_email + "<br> Текст сообщения: " + mail_body;
 
