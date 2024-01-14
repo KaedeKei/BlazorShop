@@ -17,7 +17,7 @@ builder.Services.AddScoped<ICatalog, SqliteCatalog>();
 //builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<ITime, TimeUTC>();
-builder.Services.AddSingleton<ISendMail, SendMailKit>();
+builder.Services.AddScoped<ISendMail, SendMailKit>();
 
 
 var dbPath = "blazorShopDb.db";
