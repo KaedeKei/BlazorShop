@@ -7,7 +7,7 @@ namespace BlazorShop.Models
 		public int Id { get; set; }
 		[Required(ErrorMessage = "Название должно быть заполнено")]
 		public string Name { get; set; }
-		[Required(ErrorMessage = "Цена долдна быть заполнена")]
+		[Required(ErrorMessage = "Цена должна быть заполнена")]
 		[Range(0, 1000000, ErrorMessage = "Цена должна быть от 0 до 1000000")]
 		public decimal Price { get; set; }
 

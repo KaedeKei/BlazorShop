@@ -1,14 +1,13 @@
 ﻿using System.Text.Json;
 using BlazorShop.Models;
 
-namespace BlazorShop.Data
+namespace BlazorShop.Data.Irrelevant
 {
-    public class InJsonFileCatalog : ICatalog
+    public class InJsonFileCatalogNotAsync : ICatalogNotAsync
     {
-
         private readonly string filePath;
 
-        public InJsonFileCatalog(string filePath)
+        public InJsonFileCatalogNotAsync(string filePath)
         {
             this.filePath = filePath;
         }
@@ -24,7 +23,6 @@ namespace BlazorShop.Data
             var products = JsonSerializer.Deserialize<List<Product>>(json);
             return products ?? new List<Product>();
         }
-
 
         public void AddProduct(Product product)
         {

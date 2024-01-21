@@ -1,8 +1,6 @@
 using BlazorShop.Data;
 using BlazorShop.Models;
 using BlazorShop.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,18 +12,20 @@ builder.Services.AddServerSideBlazor();
 //builder.Services.AddSingleton<ICatalog>(new InFileCatalog("products.txt"));
 //builder.Services.AddSingleton<ICatalog>(new InJsonFileCatalog("products.json"));
 //builder.Services.AddSingleton<ICatalog, InMemoryCatalog>();
-builder.Services.AddScoped<ICatalog, SqliteCatalog>();
-//builder.Services.AddSingleton<ProductService>();
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<ITime, TimeUTC>();
-builder.Services.AddScoped<ISendMail, SendMailKit>();
+//builder.Services.AddScoped<ICatalog, SqliteCatalogNotAsync> ();
 
+builder.Services.AddScoped<ICatalogAsync, SqliteCatalogAsync>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddSingleton<ITime, TimeUTC>();
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSenderMailKit>();
+builder.Services.AddScoped<ISmtpConfiguration, SmptConfiguration>();
 
 var dbPath = "blazorShopDb.db";
 builder.Services.AddDbContext<AppDbContext>(
    options => options.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

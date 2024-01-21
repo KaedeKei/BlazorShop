@@ -5,7 +5,7 @@
 
 <PageTitle>Adding new product</PageTitle>
 
-@inject ICatalog Catalog
+@inject ICatalogAsync Catalog
 
 <h3>Добавление товара</h3>
 
@@ -51,8 +51,5 @@
 	private void RefreshMessageText()
 	{
 		_message_text = "";
-	}
-	
-	
-	
+	}	
 }

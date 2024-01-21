@@ -1,12 +1,12 @@
-﻿using BlazorShop.Models;
+﻿using BlazorShop.Data.Irrelevant;
+using BlazorShop.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorShop.Data
+namespace BlazorShop.Data.Irrelevant
 {
-    public class SqliteCatalog : ICatalog
+    public class SqliteCatalogNotAsync : ICatalogNotAsync
     {
         private readonly AppDbContext _dbContext;
-
 
         public void AddProduct(Product product)
         {
@@ -19,7 +19,7 @@ namespace BlazorShop.Data
             return _dbContext.Products.ToList();
         }
 
-        public SqliteCatalog(AppDbContext dbContext)
+        public SqliteCatalogNotAsync(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -32,6 +32,5 @@ namespace BlazorShop.Data
             _dbContext.Entry(product).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
-
     }
 }

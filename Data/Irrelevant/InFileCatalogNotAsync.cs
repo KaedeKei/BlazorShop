@@ -1,13 +1,13 @@
 ﻿using BlazorShop.Models;
 
-namespace BlazorShop.Data
+namespace BlazorShop.Data.Irrelevant
 
 {
-    public class InFileCatalog : ICatalog
+    public class InFileCatalogNotAsync : ICatalogNotAsync
     {
         private readonly string fileName;
 
-        public InFileCatalog(string fileName)
+        public InFileCatalogNotAsync(string fileName)
         {
             this.fileName = fileName;
         }

@@ -1,16 +1,17 @@
 ﻿using MimeKit;
 using MailKit.Net.Smtp;
-namespace BlazorShop.Services
+using System.Threading.Tasks;
+namespace BlazorShop.Services.Irrelevant
 {
-    public class EmailServiceMailKit
+    public class SmtpEmailServiceMailKit
     {
-        public void SendEmail(string mail_subject, string message)
+        public async Task SendEmailAsync(string mailSubject, string message)
         {
             using var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("Сообщение с сайта BlazorShop", "my@mail.ru"));
             emailMessage.To.Add(new MailboxAddress("", "my@mail.ru"));
-            emailMessage.Subject = mail_subject;
+            emailMessage.Subject = mailSubject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = message
@@ -18,10 +19,10 @@ namespace BlazorShop.Services
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp.mail.ru", 25, false);
-                client.Authenticate("login@yandex.ru", "password");
-                client.Send(emailMessage);
-                client.Disconnect(true);
+                await client.ConnectAsync("smtp.mail.ru", 25, false);
+                await client.AuthenticateAsync("my@mail.ru", "passwird");
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
             }
         }
     }

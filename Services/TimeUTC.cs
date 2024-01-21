@@ -11,6 +11,5 @@
         {
             return DateTime.UtcNow.ToString("dd MMMM yyyyг., HH:mm:ss");
         }
-
     }
 }

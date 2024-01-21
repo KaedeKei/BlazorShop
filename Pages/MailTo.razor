@@ -6,7 +6,7 @@
 
 <PageTitle>MailTo</PageTitle>
 
-@inject ISendMail SendMailKit
+@inject IEmailSender SendMail
 
 <h4>Если у Вас остались какие-то вопросы или пожелания, Вы можете заполнить форму обратной связи.</h4>
 
@@ -18,7 +18,7 @@
 		<tr><td>Тема сообщения:</td><td><InputText @bind-Value="_model.MailSubject" @onclick="RefreshMessageText" /></td></tr>
 		<tr><td>Текст сообщения:</td><td><InputTextArea @bind-Value="_model.MailBody" @onclick="RefreshMessageText"></InputTextArea></td></tr>
 	</table>
-	<div class="add_product_div">@_message_text</div>
+	<div class="add_product_div">@_messageText</div>
 
 	<br /> <input type="submit" value="Отправить">
 	<ValidationSummary />
@@ -26,11 +26,11 @@
 
 @code {
 	private FormModel _model = new();
-	string _message_text;
+	string _messageText;
 	private void ProcessValidForm()
 	{
-		SendMailKit.SendMail(_model.UserEmail, _model.MailSubject, _model.MailBody);
-		_message_text = "Ваше сообщение успешно отправлено.";
+		SendMail.SendMailAsync(_model.UserEmail, _model.MailSubject, _model.MailBody);
+		_messageText = "Ваше сообщение успешно отправлено.";
 		_model = new();
 	}
 
@@ -51,7 +51,6 @@
 
 	private void RefreshMessageText()
 	{
-		_message_text = "";
+		_messageText = "";
 	}
-
 }

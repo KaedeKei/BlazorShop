@@ -1,5 +1,6 @@
 ﻿@page "/products"
 @using BlazorShop.Models
+@using BlazorShop.Data
 
 <PageTitle>Products</PageTitle>
 
@@ -7,12 +8,29 @@
 
 <h3>Список товаров</h3>
 
-@foreach(var product in Catalog.GetProducts())
+@if (_products == null)
 {
-	<div>@product.ToString()</div>
+	<p>Загрузка...</p>
+}
+else if (_products.Count == 0)
+{
+	<p>Нет товаров</p>
+}
+else
+{
+	<p>Всего товаров: @_products.Count</p>
+	@foreach (var product in _products)
+	{
+		<div>@product.ToString()</div>
+	}
 }
 
 
 @code {
+    private IReadOnlyCollection<Product>? _products;
 
+	protected override async Task OnInitializedAsync()
+	{
+		_products = await Catalog.GetProducts();
+	}
 }
