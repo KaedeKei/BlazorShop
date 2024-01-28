@@ -1,11 +1,12 @@
 ﻿using BlazorShop.Data;
+using MailKit.Net.Smtp;
 
 namespace BlazorShop.Services
 {
     public class SmtpEmailSenderMailKit : IEmailSender
     {
 		public readonly ISmtpConfiguration _configuration = new SmptConfiguration();
-
+				
 		public async Task SendMailAsync(string usersEmail, string mailSubject, string mailBody)
         {
 			SmtpEmailServiceMailKit emailService = new SmtpEmailServiceMailKit(_configuration.GetHost(), _configuration.GetUserName(), _configuration.GetPassword(), _configuration.GetPort());
@@ -14,5 +15,6 @@ namespace BlazorShop.Services
 
             await emailService.SendEmailAsync(mailSubject, myMessage);
 		}
-    }
+
+	}
 }

@@ -9,6 +9,7 @@ namespace BlazorShop.Services
 		private string _userName;
 		private string _password;
 		private int _port;
+		private readonly SmtpClient _client = new();
 
 		public SmtpEmailServiceMailKit(string host, string userName, string password,int port)
 		{
@@ -29,15 +30,28 @@ namespace BlazorShop.Services
 			{
 				Text = message
 			};
+			
+			await EnsureConnectedAndAuthed();
+			await _client.SendAsync(emailMessage);
+			await _client.DisconnectAsync(true);
+		}
 
-			using (var client = new SmtpClient())
+		private async Task EnsureConnectedAndAuthed()
+		{
+			if (!_client.IsConnected)
 			{
-				await client.ConnectAsync(_host, _port, false);
-				await client.AuthenticateAsync(_userName, _password);
-				await client.SendAsync(emailMessage);
-				await client.DisconnectAsync(true);
+				await _client.ConnectAsync(_host, _port, false);
+			}
+			if (!_client.IsAuthenticated)
+			{
+				await _client.AuthenticateAsync(_userName, _password);
 			}
 		}
 
+		public async ValueTask DisposeAsync()
+		{
+			await _client.DisconnectAsync(true);
+			_client.Dispose();
+		}
 	}
 }

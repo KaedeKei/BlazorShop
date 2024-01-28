@@ -3,10 +3,14 @@
 @using BlazorShop.Data
 @using System.ComponentModel.DataAnnotations
 @using BlazorShop.Services
+@using MailKit
+@using Serilog
 
 <PageTitle>MailTo</PageTitle>
 
 @inject IEmailSender SendMail
+@inject ILogger<MailTo> Logger
+
 
 <h4>Если у Вас остались какие-то вопросы или пожелания, Вы можете заполнить форму обратной связи.</h4>
 
@@ -27,11 +31,35 @@
 @code {
 	private FormModel _model = new();
 	string _messageText;
-	private void ProcessValidForm()
+	int _attemptToSend = 0;
+
+
+	private async Task ProcessValidForm()
 	{
-		SendMail.SendMailAsync(_model.UserEmail, _model.MailSubject, _model.MailBody);
-		_messageText = "Ваше сообщение успешно отправлено.";
-		_model = new();
+		_attemptToSend++;
+		Logger.LogInformation("Попытка отправки имейла от {Email}", _model.UserEmail);
+
+		try
+		{
+			await SendMail.SendMailAsync(_model.UserEmail, _model.MailSubject, _model.MailBody);
+			_messageText = "Ваше сообщение успешно отправлено.";
+			Logger.LogInformation("Письмо от {Email} успешно отправлено ", _model.UserEmail);
+			_model = new();
+		}
+		catch (Exception e) when (_attemptToSend <3
+										&& e is ServiceNotAuthenticatedException
+										or ServiceNotConnectedException
+										)
+		{
+			Logger.LogWarning(e, "Ошибка отправки имейла от {Email}. Делаем еще одну попытку", _model.UserEmail, e.Message);
+			await ProcessValidForm();
+		}
+
+		catch (Exception e) 
+		{
+			Logger.LogCritical(e, "Ошибка отправки имейла от {Email}. Ошибка: {Error}", _model.UserEmail, e.Message);
+			_messageText = "Ошибка отправки письма";
+		}
 	}
 
 	private class FormModel
